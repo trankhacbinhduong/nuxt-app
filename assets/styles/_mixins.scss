@@ -1,0 +1,78 @@
+$font-styles: (
+  text-xl-bold: (
+    font-size: var(--font-size-xl),
+    font-weight: var(--font-weight-bold),
+    line-height: var(--line-height-xl),
+  ),
+  text-lg-bold: (
+    font-size: var(--font-size-lg),
+    font-weight: var(--font-weight-bold),
+    line-height: var(--line-height-lg),
+  ),
+  text-md-bold: (
+    font-size: var(--font-size-md),
+    font-weight: var(--font-weight-bold),
+    line-height: var(--line-height-md),
+  ),
+  text-md-semi: (
+    font-size: var(--font-size-md),
+    font-weight: var(--font-weight-semi),
+    line-height: var(--line-height-md),
+  ),
+  text-sm-bold: (
+    font-size: var(--font-size-sm),
+    font-weight: var(--font-weight-bold),
+    line-height: var(--line-height-sm),
+  ),
+  text-sm-semi: (
+    font-size: var(--font-size-sm),
+    font-weight: var(--font-weight-semi),
+    line-height: var(--line-height-sm),
+  ),
+  text-xs-semi: (
+    font-size: var(--font-size-xs),
+    font-weight: var(--font-weight-semi),
+    line-height: var(--line-height-xs),
+  ),
+  text-xs-regular: (
+    font-size: var(--font-size-xs),
+    font-weight: var(--font-weight-regular),
+    line-height: var(--line-height-xs),
+  ),
+);
+
+@mixin font-style($style-name, $color: var(--color-text-2)) {
+  @if map-has-key($font-styles, $style-name) {
+    $style: map-get($font-styles, $style-name);
+
+    @each $property, $value in $style {
+      #{$property}: #{$value};
+      color: $color;
+      letter-spacing: var(--letter-spacing);
+      text-underline-position: from-font;
+      text-decoration-skip-ink: none;
+    }
+  } @else {
+    @warn "`#{$style-name}` not found.";
+  }
+}
+
+$breakpoints: (
+  'sm': 576px,
+  'md': 768px,
+  'lg': 992px,
+  'xl': 1200px,
+  'xxl': 1440px,
+) !default;
+
+@mixin media-down($breakpoint: sm) {
+  $breakpoint-value: map-get($breakpoints, $breakpoint);
+
+  @if $breakpoint-value {
+    @media (max-width: #{$breakpoint-value}) {
+      @content;
+    }
+  } @else {
+    @warn "`#{$breakpoint}` not found.";
+  }
+}

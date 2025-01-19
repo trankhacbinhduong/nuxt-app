@@ -2,8 +2,18 @@
 export default defineNuxtConfig({
   modules: ['@nuxt/eslint'],
   devtools: { enabled: true },
-  css: ['~/assets/app.css'],
+  css: ['~/assets/styles/app.css'],
   compatibilityDate: '2024-11-01',
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          silenceDeprecations: ['mixed-decls', 'color-functions', 'global-builtin', 'import'],
+          additionalData: '@use "./assets/styles/_mixins.scss" as *;',
+        },
+      },
+    },
+  },
   eslint: {
     config: {
       stylistic: {
