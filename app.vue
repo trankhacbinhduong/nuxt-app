@@ -8,7 +8,7 @@
       </h1>
 
       <nav class="navbar">
-        <button class="today-button">
+        <button class="today-button" @click="scrollToTodaySession">
           Hôm nay
         </button>
         <h2 class="title">
@@ -70,6 +70,11 @@ import todayIcon from '~/assets/images/today.svg'
 import lateIcon from '~/assets/images/warn.svg'
 
 const { level, progressPanelProps } = await useLevelData()
+
+function scrollToTodaySession() {
+  const todaySessionCard = document.querySelector('.session-card.-today')
+  todaySessionCard?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+}
 
 async function useLevelData() {
   const { data: level, error } = await useFetch('/api/levels/1', {
