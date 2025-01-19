@@ -170,14 +170,14 @@ async function useLevelData() {
     return months[0]
   }
 
-  return { level, progressPanelProps }
-}
+  function formatSessionUnits(units: SessionUnit[]) {
+    return units.reduce((acc, unit) => {
+      acc[unit.unitId] = unit.unitTitle
+      return acc
+    }, {} as Record<string, string>)
+  }
 
-function formatSessionUnits(units: SessionUnit[]) {
-  return units.reduce((acc, unit) => {
-    acc[unit.unitId] = unit.unitTitle
-    return acc
-  }, {} as Record<string, string>)
+  return { level, progressPanelProps }
 }
 </script>
 
