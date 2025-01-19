@@ -1,6 +1,11 @@
 <template>
   <div class="learning-dashboard">
     <AppHeader />
+
+    <ProgressPanel
+      class="progress-panel"
+      v-bind="progressPanelProps"
+    />
   </div>
 </template>
 
@@ -10,7 +15,7 @@ import todayIcon from '~/assets/images/today.svg'
 import lateIcon from '~/assets/images/warn.svg'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { level } = await useLevelData()
+const { level, progressPanelProps } = await useLevelData()
 
 async function useLevelData() {
   const { data: level, error } = await useFetch('/api/levels/1', {
@@ -27,6 +32,15 @@ async function useLevelData() {
     // TODO: Handle error
     console.error(error.value)
   }
+
+  const progressPanelProps = computed(() => {
+    return {
+      username: 'Trần Khắc Bình Dương',
+      duration: level.value!.duration,
+      remainingDuration: level.value!.remainingDuration,
+      ...level.value!.missions,
+    }
+  })
 
   function preprocessSessionDataByMonth(sessions: Session[]) {
     const monthBoundaries = getMonthBoundaries(sessions)
@@ -97,7 +111,7 @@ async function useLevelData() {
     return months[0]
   }
 
-  return { level }
+  return { level, progressPanelProps }
 }
 
 function formatSessionUnits(units: SessionUnit[]) {
@@ -125,6 +139,10 @@ function formatSessionUnits(units: SessionUnit[]) {
 
   @include media-down(sm) {
     padding: 84px 16px 0px 16px;
+  }
+
+  > .progress-panel {
+    margin: var(--space-48) 0 auto 0;
   }
 }
 </style>
