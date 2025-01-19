@@ -2,6 +2,61 @@
   <div class="learning-dashboard">
     <AppHeader />
 
+    <main v-if="level" class="main-content">
+      <h1 class="title">
+        Chặng: {{ level.levelName }}
+      </h1>
+
+      <nav class="navbar">
+        <button class="today-button">
+          Hôm nay
+        </button>
+        <h2 class="title">
+          Tổng quan
+        </h2>
+      </nav>
+
+      <MonthlySessionList
+        class="monthly-sessions"
+        :monthly-sessions="level.sessions"
+      >
+        <template #default="{ session }">
+          <div :class="['session-card', `-${session.status.value}`]">
+            <div class="header">
+              <span :class="['badge', `-${session.status.value}`]">
+                Buổi {{ session.overallIndex }}
+                <img v-if="session.status.icon" :src="session.status.icon">
+              </span>
+
+              <span v-if="session.date" class="label -date">{{ formatDate(session.date) }}</span>
+
+              <div class="value -score">
+                <img src="~/assets/images/trophy.svg" alt="trophy">
+                {{ session.proficiency }}/{{ session.totalProficiency }}
+              </div>
+            </div>
+
+            <div class="session-units">
+              <div
+                v-for="unitId in session.unitIds"
+                :key="unitId"
+                class="session-unit"
+              >
+                <span :class="['title', `-${session.status.value}`] ">
+                  <span :class="['status', `-${session.status.value}`]" />
+                  {{ level.units[unitId] }}
+                </span>
+              </div>
+            </div>
+
+            <p v-if="session.status.label" :class="['status', `-${session.status.value}`]">
+              {{ session.status.label }}
+            </p>
+          </div>
+        </template>
+      </MonthlySessionList>
+    </main>
+
     <ProgressPanel
       class="progress-panel"
       v-bind="progressPanelProps"
@@ -14,7 +69,6 @@ import doneIcon from '~/assets/images/done.svg'
 import todayIcon from '~/assets/images/today.svg'
 import lateIcon from '~/assets/images/warn.svg'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { level, progressPanelProps } = await useLevelData()
 
 async function useLevelData() {
@@ -143,6 +197,180 @@ function formatSessionUnits(units: SessionUnit[]) {
 
   > .progress-panel {
     margin: var(--space-48) 0 auto 0;
+  }
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 84px);
+  overflow: hidden;
+
+  > .title {
+    margin-bottom: var(--space-16);
+    @include font-style(text-xl-bold, var(--color-white));
+  }
+
+  > .navbar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--space-12);
+    padding: var(--space-16);
+    background: var(--color-white);
+    border-bottom: 1px solid var(--color-gray-2);
+    border-top-left-radius: var(--space-16);
+    border-top-right-radius: var(--space-16);
+
+    > .today-button {
+      padding: var(--space-10) var(--space-16);
+      border: 1px solid var(--color-gray-3);
+      border-radius: var(--border-radius-md);
+      background: var(--color-white);
+      cursor: pointer;
+      @include font-style(text-sm-semi, var(--color-text-1));
+    }
+
+    > .title {
+      @include font-style(text-lg-bold, var(--color-text-1));
+    }
+  }
+
+  > .monthly-sessions {
+    flex:1;
+    overflow-y: auto;
+  }
+}
+
+.session-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space);
+  padding: var(--space-12);
+  background: var(--color-gray-4);
+  border-radius: var(--border-radius-lg);
+
+  &.-today {
+    border: 2px solid var(--color-blue);
+    background: #EBF5FF;
+  }
+
+  &.-completed {
+    background: #F0FDF4;
+  }
+
+  &.-late {
+    background: #FFFBEB;
+  }
+
+  > .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space);
+
+    .label {
+      @include font-style(text-sm-semi, var(--color-text-1));
+
+      &.-date {
+        flex: 1;
+      }
+    }
+
+    .value {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      @include font-style(text-sm-regular, var(--color-text-2));
+    }
+  }
+
+  > .status {
+    @include font-style(text-xs-regular, var(--color-green));
+
+    &.-completed {
+      color: var(--color-green);
+    }
+
+    &.-late {
+      color: var(--color-orange);
+    }
+
+    &.-today {
+      color: var(--color-blue)
+    }
+  }
+}
+
+.session-units {
+  flex: 1;
+}
+
+.session-unit {
+  display: flex;
+  align-items: center;
+  padding: var(--space-4) var(--space);
+  gap: var(--space-4);
+
+  .status {
+    display: inline-block;
+    height: 8px;
+    aspect-ratio: cos(30deg);
+    clip-path: polygon(-50% 50%,50% 100%,150% 50%,50% 0);
+    background: var(--color-blue);
+
+    &.-completed {
+      background: var(--color-green);
+    }
+
+    &.-late {
+      background: var(--color-orange);
+    }
+
+    &.-today {
+      background: var(--color-blue)
+    }
+  }
+
+  .title {
+    @include font-style(text-xs-regular);
+
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+      color: var(--color-blue)
+    }
+
+    &.-completed:hover {
+      color: var(--color-green);
+    }
+
+    &.-late:hover {
+      color: var(--color-orange);
+    }
+  }
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space);
+  border-radius: var(--border-radius-md);
+  @include font-style(text-sm-bold, var(--color-white));
+  background: var(--color-gray-5);
+
+  &.-completed {
+    background: var(--color-green);
+  }
+
+  &.-late {
+    background: var(--color-orange);
+  }
+
+  &.-today {
+    background: var(--color-blue)
   }
 }
 </style>
