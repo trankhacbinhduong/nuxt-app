@@ -77,8 +77,17 @@ const statusText = computed(() => {
   flex-direction: column;
   gap: var(--space-16);
 
+  @include media-down(md) {
+    flex-direction: column-reverse;
+    gap: var(--space-24);
+  }
+
   > .image-cover {
     text-align: center;
+
+    @include media-down(md) {
+      display: none;
+    }
   }
 }
 
@@ -90,8 +99,17 @@ const statusText = computed(() => {
   border-radius: var(--border-radius-lg);
   padding: var(--space-12) var(--space-16);
 
+  @include media-down(sm) {
+    padding: var(--space-12);
+    gap: var(--space);
+  }
+
   > .title {
     @include font-style(text-lg-bold, var(--color-text-1));
+
+    @include media-down(sm) {
+      @include font-style(text-md-bold, var(--color-text-1));
+    }
   }
 }
 
@@ -154,6 +172,10 @@ const statusText = computed(() => {
   background: var(--color-gray-6);
   border-radius: var(--border-radius-xl);
   position: relative;
+
+  @include media-down(sm) {
+    height: var(--space-12);
+  }
 
   > .bar {
     position: absolute;

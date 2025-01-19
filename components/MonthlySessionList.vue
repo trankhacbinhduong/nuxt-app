@@ -36,6 +36,10 @@ function formatYearMonth(yearMonth: string) {
   padding: var(--space-16);
   background: var(--color-white);
 
+  @include media-down(sm) {
+    padding: var(--space-12);
+  }
+
   > .header {
     display: flex;
     align-items: center;
@@ -51,6 +55,10 @@ function formatYearMonth(yearMonth: string) {
 
     > .month {
       @include font-style(text-md-bold);
+
+      @include media-down(sm) {
+        @include font-style(text-sm-bold);
+      }
     }
   }
 }
