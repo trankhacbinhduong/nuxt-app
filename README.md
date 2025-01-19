@@ -70,4 +70,10 @@ yarn preview
 bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Deploy
+
+Deploy the application on the Edge with [NuxtHub](https://hub.nuxt.com):
+
+```bash
+npx nuxthub deploy
+```
